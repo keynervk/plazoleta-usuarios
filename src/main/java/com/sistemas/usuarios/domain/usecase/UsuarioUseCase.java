@@ -16,9 +16,11 @@ import java.util.regex.Pattern;
 public class UsuarioUseCase implements IUsuarioServicePort {
 
     private static final String ROL_PROPIETARIO = "PROPIETARIO";
+    private static final String ROL_CLIENTE = "CLIENTE";
     private static final int EDAD_MINIMA = 18;
 
-    private static final Pattern PATRON_CORREO = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    private static final Pattern PATRON_CORREO =
+            Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     private static final Pattern PATRON_CELULAR = Pattern.compile("^\\+?\\d{1,12}$");
     private static final Pattern PATRON_DOCUMENTO = Pattern.compile("^\\d+$");
 
@@ -27,8 +29,8 @@ public class UsuarioUseCase implements IUsuarioServicePort {
     private final IPasswordEncoderPort passwordEncoderPort;
 
     public UsuarioUseCase(IUsuarioPersistencePort usuarioPersistencePort,
-            IRolPersistencePort rolPersistencePort,
-            IPasswordEncoderPort passwordEncoderPort) {
+                          IRolPersistencePort rolPersistencePort,
+                          IPasswordEncoderPort passwordEncoderPort) {
         this.usuarioPersistencePort = usuarioPersistencePort;
         this.rolPersistencePort = rolPersistencePort;
         this.passwordEncoderPort = passwordEncoderPort;
@@ -36,21 +38,38 @@ public class UsuarioUseCase implements IUsuarioServicePort {
 
     @Override
     public void guardarPropietario(Usuario usuario) {
+        validarDatosBasicos(usuario);
+        if (usuario.getFechaNacimiento() == null) {
+            throw new ValidacionException("La fecha de nacimiento es obligatoria");
+        }
+        validarMayorDeEdad(usuario.getFechaNacimiento());
+        guardarConRol(usuario, ROL_PROPIETARIO);
+    }
+
+    @Override
+    public void guardarCliente(Usuario usuario) {
+        validarDatosBasicos(usuario);
+        guardarConRol(usuario, ROL_CLIENTE);
+    }
+
+    private void guardarConRol(Usuario usuario, String nombreRol) {
+        validarQueNoExista(usuario);
+
+        Rol rol = rolPersistencePort.buscarPorNombre(nombreRol);
+        if (rol == null) {
+            throw new ValidacionException("El rol " + nombreRol + " no existe en el sistema");
+        }
+
+        usuario.setRol(rol);
+        usuario.setClave(passwordEncoderPort.encriptar(usuario.getClave()));
+        usuarioPersistencePort.guardarUsuario(usuario);
+    }
+
+    private void validarDatosBasicos(Usuario usuario) {
         validarCamposObligatorios(usuario);
         validarCorreo(usuario.getCorreo());
         validarCelular(usuario.getCelular());
         validarDocumento(usuario.getDocumentoDeIdentidad());
-        validarMayorDeEdad(usuario.getFechaNacimiento());
-        validarQueNoExista(usuario);
-
-        Rol rolPropietario = rolPersistencePort.buscarPorNombre(ROL_PROPIETARIO);
-        if (rolPropietario == null) {
-            throw new ValidacionException("El rol PROPIETARIO no existe en el sistema");
-        }
-
-        usuario.setRol(rolPropietario);
-        usuario.setClave(passwordEncoderPort.encriptar(usuario.getClave()));
-        usuarioPersistencePort.guardarUsuario(usuario);
     }
 
     private void validarCamposObligatorios(Usuario usuario) {
@@ -68,9 +87,6 @@ public class UsuarioUseCase implements IUsuarioServicePort {
         }
         if (estaVacio(usuario.getCelular())) {
             throw new ValidacionException("El celular es obligatorio");
-        }
-        if (usuario.getFechaNacimiento() == null) {
-            throw new ValidacionException("La fecha de nacimiento es obligatoria");
         }
         if (estaVacio(usuario.getCorreo())) {
             throw new ValidacionException("El correo es obligatorio");

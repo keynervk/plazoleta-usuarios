@@ -32,4 +32,14 @@ public class UsuarioController {
         usuarioHandler.guardarPropietario(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @Operation(summary = "Crear una cuenta de cliente")
+    @ApiResponse(responseCode = "201", description = "Cliente creado")
+    @ApiResponse(responseCode = "400", description = "Datos invalidos")
+    @ApiResponse(responseCode = "409", description = "Correo o documento ya registrado")
+    @PostMapping("/cliente")
+    public ResponseEntity<Void> guardarCliente(@RequestBody UsuarioRequestDto dto) {
+        usuarioHandler.guardarCliente(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
