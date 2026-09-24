@@ -19,4 +19,8 @@ public class UsuarioHandler {
     public void guardarPropietario(UsuarioRequestDto dto) {
         usuarioServicePort.guardarPropietario(mapper.toModel(dto));
     }
+
+    public void guardarCliente(UsuarioRequestDto dto) {
+        usuarioServicePort.guardarCliente(mapper.toModel(dto));
+    }
 }
