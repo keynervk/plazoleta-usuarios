@@ -7,4 +7,6 @@ public interface IUsuarioServicePort {
     void guardarPropietario(Usuario usuario);
 
     void guardarCliente(Usuario usuario);
+
+    void guardarEmpleado(Usuario usuario);
 }
