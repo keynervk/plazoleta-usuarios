@@ -42,4 +42,14 @@ public class UsuarioController {
         usuarioHandler.guardarCliente(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @Operation(summary = "Crear una cuenta de empleado (temporal: aun sin restriccion de propietario, pendiente HU-5)")
+    @ApiResponse(responseCode = "201", description = "Empleado creado")
+    @ApiResponse(responseCode = "400", description = "Datos invalidos")
+    @ApiResponse(responseCode = "409", description = "Correo o documento ya registrado")
+    @PostMapping("/empleado")
+    public ResponseEntity<Void> guardarEmpleado(@RequestBody UsuarioRequestDto dto) {
+        usuarioHandler.guardarEmpleado(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }
