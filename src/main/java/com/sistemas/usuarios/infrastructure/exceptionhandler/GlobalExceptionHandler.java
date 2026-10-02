@@ -1,5 +1,6 @@
 package com.sistemas.usuarios.infrastructure.exceptionhandler;
 
+import com.sistemas.usuarios.domain.exception.CredencialesInvalidasException;
 import com.sistemas.usuarios.domain.exception.UsuarioYaExisteException;
 import com.sistemas.usuarios.domain.exception.ValidacionException;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleYaExiste(UsuarioYaExisteException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(409, ex.getMessage()));
+    }
+
+    @ExceptionHandler(CredencialesInvalidasException.class)
+    public ResponseEntity<ErrorResponse> handleCredencialesInvalidas(CredencialesInvalidasException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErrorResponse(401, ex.getMessage()));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
