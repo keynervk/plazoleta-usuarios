@@ -17,4 +17,9 @@ public class PasswordEncoderAdapter implements IPasswordEncoderPort {
     public String encriptar(String claveSinEncriptar) {
         return passwordEncoder.encode(claveSinEncriptar);
     }
+
+    @Override
+    public boolean coincide(String claveSinEncriptar, String claveEncriptada) {
+        return passwordEncoder.matches(claveSinEncriptar, claveEncriptada);
+    }
 }

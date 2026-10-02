@@ -9,4 +9,6 @@ public interface IUsuarioPersistencePort {
     boolean existePorCorreo(String correo);
 
     boolean existePorDocumento(String documentoDeIdentidad);
+
+    Usuario buscarPorCorreo(String correo);
 }
