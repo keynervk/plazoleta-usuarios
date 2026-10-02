@@ -1,9 +1,12 @@
 package com.sistemas.usuarios.infrastructure.configuration;
 
+import com.sistemas.usuarios.domain.api.IAutenticacionServicePort;
 import com.sistemas.usuarios.domain.api.IUsuarioServicePort;
 import com.sistemas.usuarios.domain.spi.IPasswordEncoderPort;
 import com.sistemas.usuarios.domain.spi.IRolPersistencePort;
+import com.sistemas.usuarios.domain.spi.ITokenPort;
 import com.sistemas.usuarios.domain.spi.IUsuarioPersistencePort;
+import com.sistemas.usuarios.domain.usecase.AutenticacionUseCase;
 import com.sistemas.usuarios.domain.usecase.UsuarioUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,5 +26,12 @@ public class BeanConfiguration {
                                                   IRolPersistencePort rolPersistencePort,
                                                   IPasswordEncoderPort passwordEncoderPort) {
         return new UsuarioUseCase(usuarioPersistencePort, rolPersistencePort, passwordEncoderPort);
+    }
+
+    @Bean
+    public IAutenticacionServicePort autenticacionServicePort(IUsuarioPersistencePort usuarioPersistencePort,
+                                                               IPasswordEncoderPort passwordEncoderPort,
+                                                               ITokenPort tokenPort) {
+        return new AutenticacionUseCase(usuarioPersistencePort, passwordEncoderPort, tokenPort);
     }
 }
