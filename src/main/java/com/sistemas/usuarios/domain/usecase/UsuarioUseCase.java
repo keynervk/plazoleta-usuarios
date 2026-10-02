@@ -17,6 +17,7 @@ public class UsuarioUseCase implements IUsuarioServicePort {
 
     private static final String ROL_PROPIETARIO = "PROPIETARIO";
     private static final String ROL_CLIENTE = "CLIENTE";
+    private static final String ROL_EMPLEADO = "EMPLEADO";
     private static final int EDAD_MINIMA = 18;
 
     private static final Pattern PATRON_CORREO =
@@ -50,6 +51,12 @@ public class UsuarioUseCase implements IUsuarioServicePort {
     public void guardarCliente(Usuario usuario) {
         validarDatosBasicos(usuario);
         guardarConRol(usuario, ROL_CLIENTE);
+    }
+
+    @Override
+    public void guardarEmpleado(Usuario usuario) {
+        validarDatosBasicos(usuario);
+        guardarConRol(usuario, ROL_EMPLEADO);
     }
 
     private void guardarConRol(Usuario usuario, String nombreRol) {
