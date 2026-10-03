@@ -11,4 +11,6 @@ public interface IUsuarioPersistencePort {
     boolean existePorDocumento(String documentoDeIdentidad);
 
     Usuario buscarPorCorreo(String correo);
+
+    Usuario buscarPorId(Long id);
 }

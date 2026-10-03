@@ -59,6 +59,17 @@ public class UsuarioUseCase implements IUsuarioServicePort {
         guardarConRol(usuario, ROL_EMPLEADO);
     }
 
+    @Override
+    public boolean esPropietario(Long idUsuario) {
+        if (idUsuario == null) {
+            return false;
+        }
+        Usuario usuario = usuarioPersistencePort.buscarPorId(idUsuario);
+        return usuario != null
+                && usuario.getRol() != null
+                && ROL_PROPIETARIO.equals(usuario.getRol().getNombre());
+    }
+
     private void guardarConRol(Usuario usuario, String nombreRol) {
         validarQueNoExista(usuario);
 

@@ -9,4 +9,6 @@ public interface IUsuarioServicePort {
     void guardarCliente(Usuario usuario);
 
     void guardarEmpleado(Usuario usuario);
+
+    boolean esPropietario(Long idUsuario);
 }
