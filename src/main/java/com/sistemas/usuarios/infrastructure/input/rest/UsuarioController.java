@@ -7,6 +7,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +45,7 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @Operation(summary = "Crear una cuenta de empleado (temporal: aun sin restriccion de propietario, pendiente HU-5)")
+    @Operation(summary = "Crear una cuenta de empleado (requiere rol PROPIETARIO)")
     @ApiResponse(responseCode = "201", description = "Empleado creado")
     @ApiResponse(responseCode = "400", description = "Datos invalidos")
     @ApiResponse(responseCode = "409", description = "Correo o documento ya registrado")
@@ -51,5 +53,12 @@ public class UsuarioController {
     public ResponseEntity<Void> guardarEmpleado(@RequestBody UsuarioRequestDto dto) {
         usuarioHandler.guardarEmpleado(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Operation(summary = "Verificar si un usuario tiene rol PROPIETARIO (uso interno entre microservicios)")
+    @ApiResponse(responseCode = "200", description = "true si es propietario, false si no")
+    @GetMapping("/{id}/es-propietario")
+    public ResponseEntity<Boolean> esPropietario(@PathVariable Long id) {
+        return ResponseEntity.ok(usuarioHandler.esPropietario(id));
     }
 }

@@ -27,4 +27,8 @@ public class UsuarioHandler {
     public void guardarEmpleado(UsuarioRequestDto dto) {
         usuarioServicePort.guardarEmpleado(mapper.toModel(dto));
     }
+
+    public boolean esPropietario(Long id) {
+        return usuarioServicePort.esPropietario(id);
+    }
 }

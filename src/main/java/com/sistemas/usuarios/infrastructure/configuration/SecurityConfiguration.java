@@ -20,15 +20,16 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/usuarios/cliente").permitAll()
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/usuarios/propietario").hasRole("ADMINISTRADOR")
-                .requestMatchers(HttpMethod.POST, "/usuarios/empleado").hasRole("PROPIETARIO")
-                .anyRequest().authenticated())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuarios/cliente").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/usuarios/*/es-propietario").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuarios/propietario").hasRole("ADMINISTRADOR")
+                        .requestMatchers(HttpMethod.POST, "/usuarios/empleado").hasRole("PROPIETARIO")
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
