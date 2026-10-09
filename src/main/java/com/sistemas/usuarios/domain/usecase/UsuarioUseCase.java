@@ -70,6 +70,12 @@ public class UsuarioUseCase implements IUsuarioServicePort {
                 && ROL_PROPIETARIO.equals(usuario.getRol().getNombre());
     }
 
+    @Override
+public Long obtenerIdPorCorreo(String correo) {
+    Usuario usuario = usuarioPersistencePort.buscarPorCorreo(correo);
+    return usuario != null ? usuario.getId() : null;
+}
+
     private void guardarConRol(Usuario usuario, String nombreRol) {
         validarQueNoExista(usuario);
 

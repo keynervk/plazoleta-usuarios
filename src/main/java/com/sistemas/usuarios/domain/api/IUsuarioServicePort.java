@@ -11,4 +11,6 @@ public interface IUsuarioServicePort {
     void guardarEmpleado(Usuario usuario);
 
     boolean esPropietario(Long idUsuario);
+
+    Long obtenerIdPorCorreo(String correo);
 }

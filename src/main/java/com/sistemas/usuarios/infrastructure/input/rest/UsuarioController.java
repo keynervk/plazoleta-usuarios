@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -61,4 +62,11 @@ public class UsuarioController {
     public ResponseEntity<Boolean> esPropietario(@PathVariable Long id) {
         return ResponseEntity.ok(usuarioHandler.esPropietario(id));
     }
+
+    @Operation(summary = "Obtener el id de un usuario a partir de su correo (uso interno entre microservicios)")
+@ApiResponse(responseCode = "200", description = "Id del usuario, o null si no existe")
+@GetMapping("/id-por-correo")
+public ResponseEntity<Long> obtenerIdPorCorreo(@RequestParam String correo) {
+    return ResponseEntity.ok(usuarioHandler.obtenerIdPorCorreo(correo));
+}
 }

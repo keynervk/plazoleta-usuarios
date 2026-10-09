@@ -31,4 +31,8 @@ public class UsuarioHandler {
     public boolean esPropietario(Long id) {
         return usuarioServicePort.esPropietario(id);
     }
+
+    public Long obtenerIdPorCorreo(String correo) {
+        return usuarioServicePort.obtenerIdPorCorreo(correo);
+    }
 }
