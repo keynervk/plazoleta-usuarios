@@ -1,6 +1,8 @@
 package com.sistemas.usuarios.application.handler;
 
+import com.sistemas.usuarios.application.dto.EmpleadoRequestDto;
 import com.sistemas.usuarios.application.dto.UsuarioRequestDto;
+import com.sistemas.usuarios.application.dto.UsuarioResponseDto;
 import com.sistemas.usuarios.application.mapper.UsuarioRequestMapper;
 import com.sistemas.usuarios.domain.api.IUsuarioServicePort;
 import org.springframework.stereotype.Service;
@@ -24,8 +26,8 @@ public class UsuarioHandler {
         usuarioServicePort.guardarCliente(mapper.toModel(dto));
     }
 
-    public void guardarEmpleado(UsuarioRequestDto dto) {
-        usuarioServicePort.guardarEmpleado(mapper.toModel(dto));
+    public void guardarEmpleado(EmpleadoRequestDto dto, String correoPropietario) {
+        usuarioServicePort.guardarEmpleado(mapper.toModel(dto), correoPropietario);
     }
 
     public boolean esPropietario(Long id) {
@@ -34,5 +36,9 @@ public class UsuarioHandler {
 
     public Long obtenerIdPorCorreo(String correo) {
         return usuarioServicePort.obtenerIdPorCorreo(correo);
+    }
+
+    public UsuarioResponseDto buscarPorId(Long id) {
+        return mapper.toDto(usuarioServicePort.buscarPorId(id));
     }
 }

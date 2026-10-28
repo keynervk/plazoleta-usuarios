@@ -1,11 +1,14 @@
 package com.sistemas.usuarios.domain.usecase;
 
 import com.sistemas.usuarios.domain.api.IUsuarioServicePort;
+import com.sistemas.usuarios.domain.exception.NoAutorizadoException;
+import com.sistemas.usuarios.domain.exception.UsuarioNoEncontradoException;
 import com.sistemas.usuarios.domain.exception.UsuarioYaExisteException;
 import com.sistemas.usuarios.domain.exception.ValidacionException;
 import com.sistemas.usuarios.domain.model.Rol;
 import com.sistemas.usuarios.domain.model.Usuario;
 import com.sistemas.usuarios.domain.spi.IPasswordEncoderPort;
+import com.sistemas.usuarios.domain.spi.IRestauranteExternoPort;
 import com.sistemas.usuarios.domain.spi.IRolPersistencePort;
 import com.sistemas.usuarios.domain.spi.IUsuarioPersistencePort;
 
@@ -28,13 +31,16 @@ public class UsuarioUseCase implements IUsuarioServicePort {
     private final IUsuarioPersistencePort usuarioPersistencePort;
     private final IRolPersistencePort rolPersistencePort;
     private final IPasswordEncoderPort passwordEncoderPort;
+    private final IRestauranteExternoPort restauranteExternoPort;
 
     public UsuarioUseCase(IUsuarioPersistencePort usuarioPersistencePort,
                           IRolPersistencePort rolPersistencePort,
-                          IPasswordEncoderPort passwordEncoderPort) {
+                          IPasswordEncoderPort passwordEncoderPort,
+                          IRestauranteExternoPort restauranteExternoPort) {
         this.usuarioPersistencePort = usuarioPersistencePort;
         this.rolPersistencePort = rolPersistencePort;
         this.passwordEncoderPort = passwordEncoderPort;
+        this.restauranteExternoPort = restauranteExternoPort;
     }
 
     @Override
@@ -54,8 +60,22 @@ public class UsuarioUseCase implements IUsuarioServicePort {
     }
 
     @Override
-    public void guardarEmpleado(Usuario usuario) {
+    public void guardarEmpleado(Usuario usuario, String correoPropietario) {
         validarDatosBasicos(usuario);
+        if (usuario.getIdRestaurante() == null) {
+            throw new ValidacionException("El id del restaurante es obligatorio para crear un empleado");
+        }
+
+        Long idPropietarioRestaurante = restauranteExternoPort.obtenerIdPropietario(usuario.getIdRestaurante());
+        if (idPropietarioRestaurante == null) {
+            throw new ValidacionException("El restaurante indicado no existe");
+        }
+
+        Usuario propietario = usuarioPersistencePort.buscarPorCorreo(correoPropietario);
+        if (propietario == null || !idPropietarioRestaurante.equals(propietario.getId())) {
+            throw new NoAutorizadoException("Solo puedes crear empleados para un restaurante que te pertenezca");
+        }
+
         guardarConRol(usuario, ROL_EMPLEADO);
     }
 
@@ -75,6 +95,18 @@ public Long obtenerIdPorCorreo(String correo) {
     Usuario usuario = usuarioPersistencePort.buscarPorCorreo(correo);
     return usuario != null ? usuario.getId() : null;
 }
+
+    @Override
+    public Usuario buscarPorId(Long id) {
+        if (id == null) {
+            throw new ValidacionException("El id del usuario es obligatorio");
+        }
+        Usuario usuario = usuarioPersistencePort.buscarPorId(id);
+        if (usuario == null) {
+            throw new UsuarioNoEncontradoException("No existe un usuario con ese id");
+        }
+        return usuario;
+    }
 
     private void guardarConRol(Usuario usuario, String nombreRol) {
         validarQueNoExista(usuario);

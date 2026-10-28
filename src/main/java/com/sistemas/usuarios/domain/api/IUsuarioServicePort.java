@@ -8,9 +8,11 @@ public interface IUsuarioServicePort {
 
     void guardarCliente(Usuario usuario);
 
-    void guardarEmpleado(Usuario usuario);
+    void guardarEmpleado(Usuario usuario, String correoPropietario);
 
     boolean esPropietario(Long idUsuario);
 
     Long obtenerIdPorCorreo(String correo);
+
+    Usuario buscarPorId(Long id);
 }
