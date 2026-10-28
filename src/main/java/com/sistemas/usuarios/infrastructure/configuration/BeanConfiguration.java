@@ -3,6 +3,7 @@ package com.sistemas.usuarios.infrastructure.configuration;
 import com.sistemas.usuarios.domain.api.IAutenticacionServicePort;
 import com.sistemas.usuarios.domain.api.IUsuarioServicePort;
 import com.sistemas.usuarios.domain.spi.IPasswordEncoderPort;
+import com.sistemas.usuarios.domain.spi.IRestauranteExternoPort;
 import com.sistemas.usuarios.domain.spi.IRolPersistencePort;
 import com.sistemas.usuarios.domain.spi.ITokenPort;
 import com.sistemas.usuarios.domain.spi.IUsuarioPersistencePort;
@@ -24,8 +25,10 @@ public class BeanConfiguration {
     @Bean
     public IUsuarioServicePort usuarioServicePort(IUsuarioPersistencePort usuarioPersistencePort,
                                                   IRolPersistencePort rolPersistencePort,
-                                                  IPasswordEncoderPort passwordEncoderPort) {
-        return new UsuarioUseCase(usuarioPersistencePort, rolPersistencePort, passwordEncoderPort);
+                                                  IPasswordEncoderPort passwordEncoderPort,
+                                                  IRestauranteExternoPort restauranteExternoPort) {
+        return new UsuarioUseCase(usuarioPersistencePort, rolPersistencePort, passwordEncoderPort,
+                restauranteExternoPort);
     }
 
     @Bean

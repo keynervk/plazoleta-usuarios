@@ -20,11 +20,12 @@ public class UsuarioEntityMapper {
         entity.setCorreo(usuario.getCorreo());
         entity.setClave(usuario.getClave());
         entity.setRol(toEntity(usuario.getRol()));
+        entity.setIdRestaurante(usuario.getIdRestaurante());
         return entity;
     }
 
     public Usuario toModel(UsuarioEntity entity) {
-        return new Usuario(
+        Usuario usuario = new Usuario(
                 entity.getId(),
                 entity.getNombre(),
                 entity.getApellido(),
@@ -34,6 +35,8 @@ public class UsuarioEntityMapper {
                 entity.getCorreo(),
                 entity.getClave(),
                 toModel(entity.getRol()));
+        usuario.setIdRestaurante(entity.getIdRestaurante());
+        return usuario;
     }
 
     public RolEntity toEntity(Rol rol) {

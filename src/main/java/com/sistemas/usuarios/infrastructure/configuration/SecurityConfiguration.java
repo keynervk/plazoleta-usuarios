@@ -35,6 +35,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/usuarios/id-por-correo").permitAll()
                         .requestMatchers(HttpMethod.POST, "/usuarios/propietario").hasRole("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.POST, "/usuarios/empleado").hasRole("PROPIETARIO")
+                        .requestMatchers(HttpMethod.GET, "/usuarios/*")
+                        .hasAnyRole("ADMINISTRADOR", "PROPIETARIO", "EMPLEADO")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

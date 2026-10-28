@@ -45,6 +45,9 @@ public class UsuarioEntity {
     @JoinColumn(name = "rol_id", nullable = false)
     private RolEntity rol;
 
+    @Column(name = "id_restaurante")
+    private Long idRestaurante;
+
     public UsuarioEntity() {
     }
 
@@ -118,5 +121,13 @@ public class UsuarioEntity {
 
     public void setRol(RolEntity rol) {
         this.rol = rol;
+    }
+
+    public Long getIdRestaurante() {
+        return idRestaurante;
+    }
+
+    public void setIdRestaurante(Long idRestaurante) {
+        this.idRestaurante = idRestaurante;
     }
 }
